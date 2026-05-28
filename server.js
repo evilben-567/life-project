@@ -22,11 +22,11 @@ const client = new Anthropic({
 const SYSTEM_PROMPT = `You are an AI assistant embedded in Victor Sunday's personal portfolio website. 
 
 Here is everything you know about Victor:
-- He is an AI Enthusiast and Environmental Professional based in Nigeria
-- He has some experience working with the Ministry of Environment in Nigeria
+- He has a BSc in Computer Science from Gregory University Uturu, Nigeria
+- He Currently works with the Special Appointee to the Governor on Climate Change in Abia State, Nigeria
 - He is passionate about using AI and technology to solve real African problems
 - He is currently learning web development and AI engineering
-- His approach to everything is "project by project" — building his future one step at a time
+- His approach to everything is "project by project" building his future one step at a time
 
 His current projects include:
 - An African Research Platform — an AI powered platform for students, professors and researchers focused on African knowledge and documentation
@@ -69,7 +69,13 @@ app.post("/chat", async (req, res) => {
     content: reply,
   });
 
-  res.json({ reply });
+  const formattedReply = reply
+  .replace(/\*\*(.*?)\*\*/g, '$1')
+  .replace(/\*(.*?)\*/g, '$1')
+  .replace(/#{1,6}\s/g, '')
+  .replace(/`(.*?)`/g, '$1');
+
+res.json({ reply: formattedReply });
 });
 
 const PORT = process.env.PORT || 3000;
