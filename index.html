@@ -488,10 +488,7 @@ body::after {
   background: var(--accent3);
   box-shadow: 0 0 8px var(--accent3);
 }
-@keyframes eyeBlink {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.1); }
-}
+
 
 /* THINKING DOTS */
 .thinking-dots {
@@ -508,10 +505,7 @@ body::after {
 }
 .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
 .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes dotBounce {
-  0%, 100% { transform: translateY(0); opacity: 0.4; }
-  50% { transform: translateY(-6px); opacity: 1; }
-}
+
 
 /* MESSAGES */
 #messages {
@@ -920,7 +914,7 @@ body::after {
         </div>
         <div>
           <div class="chat-title">AI ASSISTANT</div>
-          <div class="chat-subtitle" id="chatStatus">ONLINE // READY</div>
+          <div class="chat-subtitle" id="chatStatus">ONLINE</div>
         </div>
       </div>
       <button class="chat-close" onclick="toggleChat()">✕</button>
