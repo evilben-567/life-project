@@ -461,6 +461,11 @@ body::after {
   top: 6px;
   box-shadow: 0 0 6px var(--accent);
   transition: all 0.3s;
+  animation: eyeIdle 3s ease-in-out infinite;
+}
+@keyframes eyeIdle {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
 }
 .avatar-eye.left { left: 3px; }
 .avatar-eye.right { right: 3px; }
