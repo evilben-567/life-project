@@ -367,6 +367,328 @@ body::after {
       .project-card.featured { grid-column: span 1; }
       footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
     }
+    /* ========== CHAT WIDGET ========== */
+#chat-widget {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* CHAT BOX */
+#chat-box {
+  display: none;
+  width: 340px; height: 460px;
+  background: rgba(1,8,16,0.97);
+  border: 1px solid var(--border-bright);
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,200,255,0.2), 0 20px 60px rgba(0,0,0,0.5);
+  position: relative;
+  animation: chatOpen 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes chatOpen {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+#chat-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+}
+
+/* CHAT HEADER */
+.chat-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0,10,20,0.8);
+}
+.chat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-title {
+  font-family: var(--font-head);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+.chat-subtitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.chat-close {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  width: 24px; height: 24px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.chat-close:hover { border-color: var(--accent); color: var(--accent); }
+
+/* AVATAR */
+.avatar-small {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border-bright);
+  border-radius: 50%;
+  background: rgba(0,20,40,0.8);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-face {
+  width: 24px; height: 24px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+.avatar-eye {
+  width: 5px; height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  box-shadow: 0 0 6px var(--accent);
+  transition: all 0.3s;
+}
+.avatar-eye.left { left: 3px; }
+.avatar-eye.right { right: 3px; }
+.avatar-mouth {
+  width: 10px; height: 2px;
+  background: var(--accent2);
+  position: absolute;
+  bottom: 4px; left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  transition: all 0.3s;
+  box-shadow: 0 0 6px var(--accent2);
+}
+
+/* THINKING AVATAR STATE */
+.avatar-face.thinking .avatar-eye {
+  animation: eyeBlink 0.5s ease-in-out infinite;
+  background: var(--accent3);
+  box-shadow: 0 0 8px var(--accent3);
+}
+.avatar-face.thinking .avatar-mouth {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  bottom: 3px;
+  background: var(--accent3);
+  box-shadow: 0 0 8px var(--accent3);
+}
+@keyframes eyeBlink {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+}
+
+/* THINKING DOTS */
+.thinking-dots {
+  display: flex; gap: 4px;
+  padding: 10px 12px;
+  align-self: flex-start;
+}
+.thinking-dots span {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: dotBounce 1s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--accent);
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* MESSAGES */
+#messages {
+  flex: 1; overflow-y: auto;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.msg-user {
+  align-self: flex-end;
+  background: rgba(0,200,255,0.1);
+  border: 1px solid rgba(0,200,255,0.2);
+  padding: 8px 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text); max-width: 85%;
+  border-radius: 2px;
+}
+.msg-ai {
+  align-self: flex-start;
+  background: rgba(0,255,157,0.05);
+  border: 1px solid rgba(0,255,157,0.15);
+  padding: 8px 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text); max-width: 85%;
+  border-radius: 2px;
+  line-height: 1.6;
+}
+
+/* INPUT */
+.chat-input-row {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+}
+#chat-input {
+  flex: 1;
+  background: rgba(0,20,40,0.5);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  color: var(--text);
+  font-family: var(--font-mono); font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#chat-input:focus { border-color: var(--accent); }
+#chat-input::placeholder { color: var(--muted); }
+.chat-send {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  font-family: var(--font-mono); font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chat-send:hover { background: var(--accent); color: var(--bg); }
+
+/* ========== FLOATING SPACESHIP ========== */
+#spaceship-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  animation: shipFloat 3s ease-in-out infinite;
+}
+@keyframes shipFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+#spaceship-btn:hover { animation-play-state: paused; }
+#spaceship-btn:hover .spaceship { filter: brightness(1.3); }
+
+.ship-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
+  animation: labelPulse 2s ease-in-out infinite;
+}
+@keyframes labelPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.spaceship {
+  position: relative;
+  width: 60px; height: 70px;
+}
+.ship-glow {
+  position: absolute;
+  width: 80px; height: 80px;
+  top: -10px; left: -10px;
+  background: radial-gradient(circle, rgba(0,200,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+.ship-body {
+  position: absolute;
+  width: 30px; height: 40px;
+  background: linear-gradient(180deg, #1a4a6a 0%, #0a2a4a 50%, #051525 100%);
+  border: 1px solid var(--accent);
+  border-radius: 50% 50% 20% 20% / 60% 60% 20% 20%;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 15px rgba(0,200,255,0.3), inset 0 0 10px rgba(0,200,255,0.1);
+}
+.ship-window {
+  position: absolute;
+  width: 12px; height: 12px;
+  background: radial-gradient(circle, var(--accent2) 0%, var(--accent) 60%, transparent 100%);
+  border-radius: 50%;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px var(--accent);
+  animation: windowGlow 2s ease-in-out infinite;
+}
+@keyframes windowGlow {
+  0%, 100% { box-shadow: 0 0 8px var(--accent); }
+  50% { box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(0,200,255,0.3); }
+}
+.ship-wing {
+  position: absolute;
+  width: 16px; height: 20px;
+  background: linear-gradient(180deg, #0a3a5a 0%, #051525 100%);
+  border: 1px solid rgba(0,200,255,0.4);
+  top: 20px;
+}
+.ship-wing.left {
+  left: -12px;
+  border-radius: 50% 0 0 50%;
+  transform: skewY(-10deg);
+}
+.ship-wing.right {
+  right: -12px;
+  border-radius: 0 50% 50% 0;
+  transform: skewY(10deg);
+}
+.ship-bottom {
+  position: absolute;
+  width: 20px; height: 8px;
+  background: linear-gradient(180deg, #0a2a4a 0%, #051525 100%);
+  border: 1px solid rgba(0,200,255,0.3);
+  border-radius: 0 0 50% 50%;
+  bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+}
+.ship-engine {
+  position: absolute;
+  width: 6px; height: 8px;
+  background: #051525;
+  border: 1px solid rgba(0,200,255,0.4);
+  border-radius: 0 0 4px 4px;
+  bottom: 4px;
+}
+.ship-engine.left { left: 6px; }
+.ship-engine.right { right: 6px; }
+.ship-flame {
+  position: absolute;
+  width: 20px; height: 20px;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at top, var(--accent) 0%, var(--accent2) 40%, transparent 80%);
+  border-radius: 0 0 50% 50%;
+  animation: flameBurn 0.15s ease-in-out infinite alternate;
+  opacity: 0.9;
+}
+@keyframes flameBurn {
+  from { transform: translateX(-50%) scaleY(1) scaleX(1); opacity: 0.8; }
+  to { transform: translateX(-50%) scaleY(1.3) scaleX(0.8); opacity: 1; }
+}
   </style>
 </head>
 <body>
@@ -583,23 +905,139 @@ body::after {
     }
   </script>
   <!-- Chat Widget -->
-<div id="chat-widget" style="position:fixed;bottom:24px;right:24px;z-index:1000;">
-  <div id="chat-box" style="display:none;width:320px;height:420px;background:#0e1318;border:1px solid #1c2530;border-radius:12px;display:none;flex-direction:column;overflow:hidden;">
-    <div style="padding:16px;background:#080b0f;border-bottom:1px solid #1c2530;font-family:Syne,sans-serif;color:#00e5ff;font-weight:700;">Victor's AI Assistant</div>
-    <div id="messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
-    <div style="padding:12px;border-top:1px solid #1c2530;display:flex;gap:8px;">
-      <input id="chat-input" type="text" placeholder="Ask me anything..." style="flex:1;background:#080b0f;border:1px solid #1c2530;border-radius:6px;padding:8px 12px;color:#c8d8e8;font-family:DM Mono,monospace;font-size:13px;outline:none;"/>
-      <button onclick="sendMessage()" style="background:#00e5ff;color:#080b0f;border:none;border-radius:6px;padding:8px 14px;font-weight:700;cursor:pointer;">→</button>
+<div id="chat-widget">
+
+  <!-- CHAT BOX -->
+  <div id="chat-box">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="avatar-small">
+          <div class="avatar-face" id="avatarFace">
+            <div class="avatar-eye left"></div>
+            <div class="avatar-eye right"></div>
+            <div class="avatar-mouth"></div>
+          </div>
+        </div>
+        <div>
+          <div class="chat-title">AI ASSISTANT</div>
+          <div class="chat-subtitle" id="chatStatus">ONLINE // READY</div>
+        </div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+
+    <div id="messages"></div>
+
+    <div class="chat-input-row">
+      <input id="chat-input" type="text" placeholder="> Initialize query..."/>
+      <button class="chat-send" onclick="sendMessage()">→</button>
     </div>
   </div>
-  <button onclick="toggleChat()" style="width:56px;height:56px;border-radius:50%;background:#00e5ff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(0,229,255,0.3);">💬</button>
+
+  <!-- FLOATING SPACESHIP BUTTON -->
+  <div id="spaceship-btn" onclick="toggleChat()">
+    <div class="spaceship">
+      <div class="ship-body">
+        <div class="ship-window"></div>
+        <div class="ship-wing left"></div>
+        <div class="ship-wing right"></div>
+        <div class="ship-engine left"></div>
+        <div class="ship-engine right"></div>
+        <div class="ship-bottom"></div>
+      </div>
+      <div class="ship-flame"></div>
+      <div class="ship-glow"></div>
+    </div>
+    <div class="ship-label">CONNECT</div>
+  </div>
+
 </div>
 
 <script>
-  function toggleChat() {
-    const box = document.getElementById('chat-box');
-    box.style.display = box.style.display === 'none' ? 'flex' : 'none';
-  }
+  // ========== CHAT FUNCTIONS ==========
+function toggleChat() {
+  const box = document.getElementById('chat-box');
+  const isOpen = box.style.display === 'flex';
+  box.style.display = isOpen ? 'none' : 'flex';
+}
+
+// Typewriter effect — types text letter by letter
+function typeWriter(element, text, speed = 18) {
+  // element = the div to type into
+  // text = the full message to type
+  // speed = milliseconds between each letter
+  let i = 0;
+  element.textContent = '';
+  return new Promise(resolve => {
+    const interval = setInterval(() => {
+      element.textContent += text[i];
+      i++;
+      // When all letters are typed, stop the interval
+      if (i >= text.length) {
+        clearInterval(interval);
+        resolve(); // signal that typing is done
+      }
+    }, speed);
+  });
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const messages = document.getElementById('messages');
+  const avatar = document.getElementById('avatarFace');
+  const chatStatus = document.getElementById('chatStatus');
+  const message = input.value.trim();
+  if (!message) return;
+
+  // Show the user's message in the chat
+  const userDiv = document.createElement('div');
+  userDiv.className = 'msg-user';
+  userDiv.textContent = message;
+  messages.appendChild(userDiv);
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+
+  // Switch avatar to "thinking" state — orange blinking eyes
+  avatar.classList.add('thinking');
+  chatStatus.textContent = 'PROCESSING...';
+
+  // Show the animated thinking dots
+  const thinkingDiv = document.createElement('div');
+  thinkingDiv.className = 'thinking-dots';
+  thinkingDiv.innerHTML = '<span></span><span></span><span></span>';
+  messages.appendChild(thinkingDiv);
+  messages.scrollTop = messages.scrollHeight;
+
+  // Send the message to the server and wait for a reply
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message })
+  });
+  const data = await res.json();
+
+  // Remove thinking dots now that we have a reply
+  thinkingDiv.remove();
+
+  // Switch avatar back to normal state
+  avatar.classList.remove('thinking');
+  chatStatus.textContent = 'ONLINE // READY';
+
+  // Create the AI reply bubble
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'msg-ai';
+  messages.appendChild(aiDiv);
+  messages.scrollTop = messages.scrollHeight;
+
+  // Type the reply out letter by letter
+  await typeWriter(aiDiv, data.reply);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+// Send message when Enter key is pressed
+document.getElementById('chat-input').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') sendMessage();
+});
 
   async function sendMessage() {
     const input = document.getElementById('chat-input');
