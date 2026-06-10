@@ -1119,27 +1119,6 @@ document.getElementById('chat-input').addEventListener('keypress', function(e) {
   setInterval(createShootingStar, 2500);
 
   // ============================================
-  // CLICK EXPLOSION
-  // ============================================
-  const explosions = [];
-  document.addEventListener('click', e => {
-    const count = 18;
-    for (let i = 0; i < count; i++) {
-      const angle = (i / count) * Math.PI * 2;
-      const speed = Math.random() * 5 + 2;
-      explosions.push({
-        x: e.clientX,
-        y: e.clientY,
-        dx: Math.cos(angle) * speed,
-        dy: Math.sin(angle) * speed,
-        r: Math.random() * 3 + 1,
-        opacity: 1,
-        color: Math.random() > 0.5 ? '0, 229, 255' : '0, 255, 157'
-      });
-    }
-  });
-
-  // ============================================
   // 3D GLOBE
   // ============================================
   const globe = {
@@ -1345,24 +1324,6 @@ document.getElementById('chat-input').addEventListener('keypress', function(e) {
         }
       });
     });
-
-    // Draw click explosions
-    for (let i = explosions.length - 1; i >= 0; i--) {
-      const e = explosions[i];
-      ctx.beginPath();
-      ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${e.color}, ${e.opacity})`;
-      ctx.shadowColor = `rgba(${e.color}, 0.8)`;
-      ctx.shadowBlur = 6;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      e.x += e.dx;
-      e.y += e.dy;
-      e.dy += 0.1;
-      e.opacity -= 0.025;
-      e.r *= 0.97;
-      if (e.opacity <= 0) explosions.splice(i, 1);
-    }
 
     // Draw 3D globe
     drawGlobe();
