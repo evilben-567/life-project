@@ -567,6 +567,18 @@ body::after {
   cursor: pointer;
   transition: all 0.2s;
 }
+
+.chat-attach {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chat-attach:hover { border-color: var(--accent); color: var(--accent); }
+
 .chat-send:hover { background: var(--accent); color: var(--bg); }
 
 /* ========== FLOATING SPACESHIP ========== */
@@ -928,8 +940,10 @@ body::after {
     <div id="messages"></div>
 
     <div class="chat-input-row">
+      <input type="file" id="file-input" accept=".pdf,.txt" style="display:none;" onchange="handleFileUpload(event)"/>
+      <button class="chat-attach" onclick="document.getElementById('file-input').click()">📎</button>
       <input id="chat-input" type="text" placeholder="> Initialize query..."/>
-      <button class="chat-send" onclick="sendMessage()">→</button>
+        <button class="chat-send" onclick="sendMessage()">→</button>
     </div>
   </div>
 
@@ -979,6 +993,45 @@ function typeWriter(element, text, speed = 18) {
     }, speed);
   });
 }
+// Stores the text from an uploaded document so we can send it with messages
+let uploadedDocumentText = '';
+let uploadedFileName = '';
+
+async function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const messages = document.getElementById('messages');
+
+  // Show a little notice in the chat that a file was selected
+  const noticeDiv = document.createElement('div');
+  noticeDiv.className = 'msg-user';
+  noticeDiv.textContent = `📎 Uploading: ${file.name}`;
+  messages.appendChild(noticeDiv);
+  messages.scrollTop = messages.scrollHeight;
+
+  // Create a FormData object — this is how files get sent over the internet
+  const formData = new FormData();
+  formData.append('file', file);
+
+  // Send the file to our backend to extract its text
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData,
+  });
+  const data = await res.json();
+
+  if (data.error) {
+    noticeDiv.textContent = `❌ Couldn't read ${file.name}`;
+    return;
+  }
+
+  // Save the extracted text so we can use it in future messages
+  uploadedDocumentText = data.text;
+  uploadedFileName = file.name;
+
+  noticeDiv.textContent = `✅ ${file.name} loaded — ask me anything about it`;
+}
 
 async function sendMessage() {
   const input = document.getElementById('chat-input');
@@ -1011,7 +1064,11 @@ async function sendMessage() {
   const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message })
+    body: JSON.stringify({  
+      message,
+      documenttext: uploadeddocumenttext,
+      documentname: uploadedfilename,
+    })
   });
   const data = await res.json();
 

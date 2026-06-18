@@ -33,11 +33,17 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { message } = req.body;
+  const { message, documentText, documentName } = req.body;
+
+  // If a document was uploaded, attach its content to the user's message
+  let fullMessage = message;
+  if (documentText) {
+    fullMessage = `[Attached document: ${documentName}]\n\n${documentText}\n\n---\n\nUser question: ${message}`;
+  }
 
   conversationHistory.push({
     role: "user",
-    content: message,
+    content: fullMessage,
   });
 
   const response = await client.messages.create({

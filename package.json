@@ -3,6 +3,8 @@
     "@anthropic-ai/sdk": "^0.90.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "formidable": "^3.5.4",
+    "pdf-parse": "^2.4.5"
   }
 }
