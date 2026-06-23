@@ -1,6 +1,6 @@
 import formidable from "formidable";
 import fs from "fs";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import { extractText, getDocumentProxy } from "unpdf";
 
 export const config = {
   api: {
@@ -8,21 +8,10 @@ export const config = {
   },
 };
 
-// Extracts plain text from a PDF file buffer
 async function extractPdfText(fileBuffer) {
-  const uint8Array = new Uint8Array(fileBuffer);
-  const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
-
-  let fullText = '';
-  // Loop through every page in the PDF and pull out its text
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items.map(item => item.str).join(' ');
-    fullText += pageText + '\n';
-  }
-
-  return fullText;
+  const pdf = await getDocumentProxy(new Uint8Array(fileBuffer));
+  const { text } = await extractText(pdf, { mergePages: true });
+  return text;
 }
 
 export default async function handler(req, res) {
@@ -52,6 +41,7 @@ export default async function handler(req, res) {
       const trimmedText = extractedText.slice(0, 15000);
       res.json({ text: trimmedText });
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: "Failed to extract text" });
     }
   });
