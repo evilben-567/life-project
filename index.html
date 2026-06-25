@@ -1066,8 +1066,8 @@ async function sendMessage() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({  
       message,
-      documenttext: uploadeddocumenttext,
-      documentname: uploadedfilename,
+      documentText: uploadedDocumentText,
+      documentName: uploadedFileName,
     })
   });
   const data = await res.json();
