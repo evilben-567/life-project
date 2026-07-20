@@ -967,128 +967,9 @@ body::after {
 </div>
 
 <script>
-  // ========== CHAT FUNCTIONS ==========
-function toggleChat() {
-  const box = document.getElementById('chat-box');
-  const isOpen = box.style.display === 'flex';
-  box.style.display = isOpen ? 'none' : 'flex';
-}
+ 
 
-// Typewriter effect — types text letter by letter
-function typeWriter(element, text, speed = 18) {
-  // element = the div to type into
-  // text = the full message to type
-  // speed = milliseconds between each letter
-  let i = 0;
-  element.textContent = '';
-  return new Promise(resolve => {
-    const interval = setInterval(() => {
-      element.textContent += text[i];
-      i++;
-      // When all letters are typed, stop the interval
-      if (i >= text.length) {
-        clearInterval(interval);
-        resolve(); // signal that typing is done
-      }
-    }, speed);
-  });
-}
-// Stores the text from an uploaded document so we can send it with messages
-let uploadedDocumentText = '';
-let uploadedFileName = '';
 
-async function handleFileUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const messages = document.getElementById('messages');
-
-  // Show a little notice in the chat that a file was selected
-  const noticeDiv = document.createElement('div');
-  noticeDiv.className = 'msg-user';
-  noticeDiv.textContent = `📎 Uploading: ${file.name}`;
-  messages.appendChild(noticeDiv);
-  messages.scrollTop = messages.scrollHeight;
-
-  // Create a FormData object — this is how files get sent over the internet
-  const formData = new FormData();
-  formData.append('file', file);
-
-  // Send the file to our backend to extract its text
-  const res = await fetch('/api/upload', {
-    method: 'POST',
-    body: formData,
-  });
-  const data = await res.json();
-
-  if (data.error) {
-    noticeDiv.textContent = `❌ Couldn't read ${file.name}`;
-    return;
-  }
-
-  // Save the extracted text so we can use it in future messages
-  uploadedDocumentText = data.text;
-  uploadedFileName = file.name;
-
-  noticeDiv.textContent = `✅ ${file.name} loaded — ask me anything about it`;
-}
-
-async function sendMessage() {
-  const input = document.getElementById('chat-input');
-  const messages = document.getElementById('messages');
-  const avatar = document.getElementById('avatarFace');
-  const chatStatus = document.getElementById('chatStatus');
-  const message = input.value.trim();
-  if (!message) return;
-
-  // Show the user's message in the chat
-  const userDiv = document.createElement('div');
-  userDiv.className = 'msg-user';
-  userDiv.textContent = message;
-  messages.appendChild(userDiv);
-  input.value = '';
-  messages.scrollTop = messages.scrollHeight;
-
-  // Switch avatar to "thinking" state — orange blinking eyes
-  avatar.classList.add('thinking');
-  chatStatus.textContent = 'PROCESSING...';
-
-  // Show the animated thinking dots
-  const thinkingDiv = document.createElement('div');
-  thinkingDiv.className = 'thinking-dots';
-  thinkingDiv.innerHTML = '<span></span><span></span><span></span>';
-  messages.appendChild(thinkingDiv);
-  messages.scrollTop = messages.scrollHeight;
-
-  // Send the message to the server and wait for a reply
-  const res = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({  
-      message,
-      documentText: uploadedDocumentText,
-      documentName: uploadedFileName,
-    })
-  });
-  const data = await res.json();
-
-  // Remove thinking dots now that we have a reply
-  thinkingDiv.remove();
-
-  // Switch avatar back to normal state
-  avatar.classList.remove('thinking');
-  chatStatus.textContent = 'ONLINE // READY';
-
-  // Create the AI reply bubble
-  const aiDiv = document.createElement('div');
-  aiDiv.className = 'msg-ai';
-  messages.appendChild(aiDiv);
-  messages.scrollTop = messages.scrollHeight;
-
-  // Type the reply out letter by letter
-  await typeWriter(aiDiv, data.reply);
-  messages.scrollTop = messages.scrollHeight;
-}
 
 // Send message when Enter key is pressed
 document.getElementById('chat-input').addEventListener('keypress', function(e) {
@@ -1096,10 +977,7 @@ document.getElementById('chat-input').addEventListener('keypress', function(e) {
 });
 
 
-  // Send on Enter key
-  document.getElementById('chat-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') sendMessage();
-  });
+  
 </script>
 <canvas id="particles"></canvas>
 <script>
@@ -1366,5 +1244,6 @@ document.getElementById('chat-input').addEventListener('keypress', function(e) {
   }
   draw();
 </script>
+  <script src="vitacore.js"></script>
 </body>
 </html>
