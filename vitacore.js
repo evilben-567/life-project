@@ -1,3 +1,11 @@
+function getSessionId() {
+  let sessionId = sessionStorage.getItem('vitacore_session');
+  if (!sessionId) {
+    sessionId = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    sessionStorage.setItem('vitacore_session', sessionId);
+  }
+  return sessionId;
+}
 
 
 let uploadedDocumentText = '';
@@ -85,7 +93,8 @@ async function sendMessage() {
     body: JSON.stringify({
       message,
       documentText: uploadedDocumentText,
-      documentName: uploadedFileName
+      documentName: uploadedFileName,
+      sessionId: getSessionId()
     })
   });
   const data = await res.json();
