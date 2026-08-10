@@ -117,4 +117,37 @@ document.addEventListener('keypress', function(e) {
   if (input && e.key === 'Enter' && document.activeElement === input) {
     sendMessage();
   }
+}); 
+
+function createChatLauncher() {
+  // Create the launcher HTML
+  const launcher = document.createElement('div');
+  launcher.id = 'vitacore-launcher';
+  launcher.innerHTML = `
+    <div id="vitacore-prompt" style="display:none;">
+      <p>Need to know more about Victor? I can help.</p>
+      <span id="close-prompt" onclick="dismissPrompt()">✕</span>
+    </div>
+    <button id="vitacore-btn" onclick="toggleChat()">
+      <span class="btn-dot"></span>
+      Ask VitaCore AI
+    </button>
+  `;
+  document.body.appendChild(launcher);
+
+  // Show the proactive message after 3 seconds
+  setTimeout(() => {
+    const prompt = document.getElementById('vitacore-prompt');
+    if (prompt) prompt.style.display = 'flex';
+  }, 3000);
+}
+
+function dismissPrompt() {
+  const prompt = document.getElementById('vitacore-prompt');
+  if (prompt) prompt.style.display = 'none';
+}
+
+// Initialize launcher when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  createChatLauncher();
 });

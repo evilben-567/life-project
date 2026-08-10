@@ -581,125 +581,80 @@ body::after {
 
 .chat-send:hover { background: var(--accent); color: var(--bg); }
 
-/* ========== FLOATING SPACESHIP ========== */
-#spaceship-btn {
+#vitacore-launcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+#vitacore-btn {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  animation: shipFloat 3s ease-in-out infinite;
-}
-@keyframes shipFloat {
-  0%, 100% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
-}
-#spaceship-btn:hover { animation-play-state: paused; }
-#spaceship-btn:hover .spaceship { filter: brightness(1.3); }
-
-.ship-label {
+  gap: 10px;
+  padding: 14px 24px;
+  background: white;
+  color: #080b0f;
+  border: none;
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  color: var(--accent);
-  text-shadow: 0 0 10px var(--accent);
-  animation: labelPulse 2s ease-in-out infinite;
-}
-@keyframes labelPulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 4px 24px rgba(255,255,255,0.15);
 }
 
-.spaceship {
-  position: relative;
-  width: 60px; height: 70px;
+#vitacore-btn:hover {
+  background: #e8f4ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(255,255,255,0.25);
 }
-.ship-glow {
-  position: absolute;
-  width: 80px; height: 80px;
-  top: -10px; left: -10px;
-  background: radial-gradient(circle, rgba(0,200,255,0.15) 0%, transparent 70%);
+
+.btn-dot {
+  width: 8px;
+  height: 8px;
+  background: #00e5ff;
   border-radius: 50%;
-  animation: glowPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 8px #00e5ff;
+  animation: pulse 2s ease-in-out infinite;
 }
-@keyframes glowPulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.2); opacity: 1; }
+
+#vitacore-prompt {
+  background: white;
+  color: #080b0f;
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  max-width: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 24px rgba(255,255,255,0.15);
+  animation: fadeUp 0.4s ease forwards;
 }
-.ship-body {
-  position: absolute;
-  width: 30px; height: 40px;
-  background: linear-gradient(180deg, #1a4a6a 0%, #0a2a4a 50%, #051525 100%);
-  border: 1px solid var(--accent);
-  border-radius: 50% 50% 20% 20% / 60% 60% 20% 20%;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 15px rgba(0,200,255,0.3), inset 0 0 10px rgba(0,200,255,0.1);
+
+#vitacore-prompt p {
+  margin: 0;
+  line-height: 1.5;
+  color: #080b0f;
 }
-.ship-window {
-  position: absolute;
-  width: 12px; height: 12px;
-  background: radial-gradient(circle, var(--accent2) 0%, var(--accent) 60%, transparent 100%);
-  border-radius: 50%;
-  top: 10px; left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 10px var(--accent);
-  animation: windowGlow 2s ease-in-out infinite;
+
+#close-prompt {
+  cursor: pointer;
+  color: #666;
+  font-size: 11px;
+  flex-shrink: 0;
+  transition: color 0.2s;
 }
-@keyframes windowGlow {
-  0%, 100% { box-shadow: 0 0 8px var(--accent); }
-  50% { box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(0,200,255,0.3); }
-}
-.ship-wing {
-  position: absolute;
-  width: 16px; height: 20px;
-  background: linear-gradient(180deg, #0a3a5a 0%, #051525 100%);
-  border: 1px solid rgba(0,200,255,0.4);
-  top: 20px;
-}
-.ship-wing.left {
-  left: -12px;
-  border-radius: 50% 0 0 50%;
-  transform: skewY(-10deg);
-}
-.ship-wing.right {
-  right: -12px;
-  border-radius: 0 50% 50% 0;
-  transform: skewY(10deg);
-}
-.ship-bottom {
-  position: absolute;
-  width: 20px; height: 8px;
-  background: linear-gradient(180deg, #0a2a4a 0%, #051525 100%);
-  border: 1px solid rgba(0,200,255,0.3);
-  border-radius: 0 0 50% 50%;
-  bottom: 12px; left: 50%;
-  transform: translateX(-50%);
-}
-.ship-engine {
-  position: absolute;
-  width: 6px; height: 8px;
-  background: #051525;
-  border: 1px solid rgba(0,200,255,0.4);
-  border-radius: 0 0 4px 4px;
-  bottom: 4px;
-}
-.ship-engine.left { left: 6px; }
-.ship-engine.right { right: 6px; }
-.ship-flame {
-  position: absolute;
-  width: 20px; height: 20px;
-  bottom: -8px; left: 50%;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at top, var(--accent) 0%, var(--accent2) 40%, transparent 80%);
-  border-radius: 0 0 50% 50%;
-  animation: flameBurn 0.15s ease-in-out infinite alternate;
-  opacity: 0.9;
-}
-@keyframes flameBurn {
-  from { transform: translateX(-50%) scaleY(1) scaleX(1); opacity: 0.8; }
-  to { transform: translateX(-50%) scaleY(1.3) scaleX(0.8); opacity: 1; }
-}
+
+#close-prompt:hover { color: #080b0f; }
+
   </style>
 </head>
 <body>
@@ -947,22 +902,7 @@ body::after {
     </div>
   </div>
 
-  <!-- FLOATING SPACESHIP BUTTON -->
-  <div id="spaceship-btn" onclick="toggleChat()">
-    <div class="spaceship">
-      <div class="ship-body">
-        <div class="ship-window"></div>
-        <div class="ship-wing left"></div>
-        <div class="ship-wing right"></div>
-        <div class="ship-engine left"></div>
-        <div class="ship-engine right"></div>
-        <div class="ship-bottom"></div>
-      </div>
-      <div class="ship-flame"></div>
-      <div class="ship-glow"></div>
-    </div>
-    <div class="ship-label">CONNECT</div>
-  </div>
+  
 
 </div>
 
