@@ -751,8 +751,37 @@ body::after {
 }
 .chat-attach:hover, .chat-send:hover { background: rgba(255,255,255,0.08); }
 
+.avatar-eye {
+  width: 5px;
+  height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  box-shadow: 0 0 6px var(--accent);
+}
+.avatar-eye.left { left: 3px; }
+.avatar-eye.right { right: 3px; }
 
+.avatar-mouth {
+  width: 10px;
+  height: 2px;
+  background: var(--accent2);
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--accent2);
+}
 
+.avatar-face.thinking .avatar-eye {
+  animation: eyeBlink 0.5s ease-in-out infinite;
+}
+@keyframes eyeBlink {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+}
   </style>
 </head>
 <body>
