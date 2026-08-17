@@ -120,22 +120,24 @@ document.addEventListener('keypress', function(e) {
 }); 
 
 function createChatLauncher() {
-  // Create the launcher HTML
   const launcher = document.createElement('div');
   launcher.id = 'vitacore-launcher';
   launcher.innerHTML = `
     <div id="vitacore-prompt" style="display:none;">
-      <p>Need to know more about Victor? I can help.</p>
-      <span id="close-prompt" onclick="dismissPrompt()">✕</span>
+      <div class="prompt-avatar">⚡</div>
+      <div class="prompt-content">
+        <div class="prompt-name">VitaCore AI</div>
+        <div class="prompt-message">Need to know more about Victor? I can help.</div>
+      </div>
+      <button id="close-prompt" onclick="dismissPrompt()">✕</button>
     </div>
     <button id="vitacore-btn" onclick="toggleChat()">
+      💬
       <span class="btn-dot"></span>
-      Ask VitaCore AI
     </button>
   `;
   document.body.appendChild(launcher);
 
-  // Show the proactive message after 3 seconds
   setTimeout(() => {
     const prompt = document.getElementById('vitacore-prompt');
     if (prompt) prompt.style.display = 'flex';
