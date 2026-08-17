@@ -11,10 +11,21 @@ function getSessionId() {
 let uploadedDocumentText = '';
 let uploadedFileName = '';
 
+let chatOpenedBefore = false;
+
 function toggleChat() {
   const box = document.getElementById('chat-box');
   const isOpen = box.style.display === 'flex';
   box.style.display = isOpen ? 'none' : 'flex';
+
+  if (!isOpen && !chatOpenedBefore) {
+    chatOpenedBefore = true;
+    const messages = document.getElementById('messages');
+    const greeting = document.createElement('div');
+    greeting.className = 'msg-ai';
+    greeting.textContent = "Hi there 👋 Need to know more about Victor? I can help.";
+    messages.appendChild(greeting);
+  }
 }
 
 function typeWriter(element, text, speed = 18) {
@@ -123,31 +134,17 @@ function createChatLauncher() {
   const launcher = document.createElement('div');
   launcher.id = 'vitacore-launcher';
   launcher.innerHTML = `
-    <div id="vitacore-prompt" style="display:none;">
-      <div class="prompt-avatar">⚡</div>
-      <div class="prompt-content">
-        <div class="prompt-name">VitaCore AI</div>
-        <div class="prompt-message">Need to know more about Victor? I can help.</div>
-      </div>
-      <button id="close-prompt" onclick="dismissPrompt()">✕</button>
-    </div>
     <button id="vitacore-btn" onclick="toggleChat()">
-      💬
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="#0a0e14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       <span class="btn-dot"></span>
     </button>
   `;
   document.body.appendChild(launcher);
-
-  setTimeout(() => {
-    const prompt = document.getElementById('vitacore-prompt');
-    if (prompt) prompt.style.display = 'flex';
-  }, 3000);
 }
 
-function dismissPrompt() {
-  const prompt = document.getElementById('vitacore-prompt');
-  if (prompt) prompt.style.display = 'none';
-}
+
 
 // Initialize launcher when page loads
 document.addEventListener('DOMContentLoaded', () => {
