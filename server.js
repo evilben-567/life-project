@@ -29,8 +29,8 @@ Here is everything you know about Victor:
 - His approach to everything is "project by project" building his future one step at a time
 
 His current projects include:
-- An African Research Platform — an AI powered platform for students, professors and researchers focused on African knowledge and documentation
-- Amebo Alert — a civic safety app for Nigeria where communities can report crimes, upload evidence, map crime hotspots and contact nearby police stations
+- An African Research Platform an AI powered platform for students, professors and researchers focused on African knowledge and documentation
+- VitaPlan an AI powered planning app that connects vision, plan, and daily actions in one thread. Users describe a goal and VitaPlan generates a real personalized plan, then sends accountability reminders that motivate rather than guilt trip. Built for people still building discipline, not people who already have it. Part of the VitaCore ecosystem, offered as a subscription.
 - This AI Assistant embedded in his portfolio
 - His personal portfolio website
 
